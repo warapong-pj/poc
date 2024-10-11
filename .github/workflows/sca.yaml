@@ -1,0 +1,12 @@
+name: sca pipeline
+
+on:
+  push:
+    branches:
+      - feat/add_pipeline_build_and_push_container_image
+
+jobs:
+  sast-pipeline:
+    uses: warapong-pj/reusable-workflows/.github/workflows/sast_scan.yaml@feat/add_sca_scan_pipeline
+    secrets:
+      snyk_token: ${{ secrets.SONAR_TOKEN }}
