@@ -22,6 +22,8 @@ jobs:
 
   build-pipeline:
     needs: get-version
+    permissions:
+      packages: write
     uses: warapong-pj/reusable-workflows/.github/workflows/build_and_push_container_image.yaml@feat/add_build_and_push_pipeline
     with:
       registry: ghcr.io/${{ github.actor }}
