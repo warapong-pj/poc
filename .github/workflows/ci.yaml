@@ -27,6 +27,6 @@ jobs:
       registry: ghcr.io/${{ github.actor }}
       username: ${{ github.actor }}
       application: sample-app
-      version: ${{ github.ref_name }}-${{ needs.get-version.outputs.version-tag }}
+      version: ${{ needs.get-version.outputs.version-tag }}
     secrets:
       password: ${{ secrets.GITHUB_TOKEN }}
