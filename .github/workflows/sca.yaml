@@ -7,6 +7,6 @@ on:
 
 jobs:
   sca-pipeline:
-    uses: warapong-pj/reusable-workflows/.github/workflows/sast_scan.yaml@feat/add_sca_scan_pipeline
+    uses: warapong-pj/reusable-workflows/.github/workflows/sca_scan_poetry.yaml@feat/add_sca_scan_pipeline
     secrets:
       snyk_token: ${{ secrets.SNYK_TOKEN }}
