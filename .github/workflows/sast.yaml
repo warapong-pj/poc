@@ -8,3 +8,6 @@ on:
 jobs:
   sast-pipeline:
     uses: warapong-pj/reusable-workflows/.github/workflows/sast_scan.yaml@feat/add_sast_scan_pipeline
+    secrets:
+      token: ${{ secrets.TOKEN }}
+      sonar_token: ${{ secrets.SONAR_TOKEN }}
