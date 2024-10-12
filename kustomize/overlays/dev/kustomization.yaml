@@ -6,3 +6,8 @@ patches:
     kind: Deployment
     name: sample-app
   path: deploy.yaml
+
+images:
+- name: sample-app
+  newName: sample-app
+  newTag: latest
