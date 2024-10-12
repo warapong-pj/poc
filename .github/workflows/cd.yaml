@@ -45,7 +45,7 @@ jobs:
           fi
 
           cd $APP_DIR
-          kustomize edit set image ghcr.io/warapong-pj/sample-app:xxxxxx
+          kustomize edit set image sample-app=ghcr.io/warapong-pj/sample-app:xxxxxx
           kustomize build
 
       #     # cd ~
