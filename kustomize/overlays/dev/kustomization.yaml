@@ -1,0 +1,8 @@
+resources:
+- ../../base
+
+patches:
+- target:
+    kind: Deployment
+    name: sample-app
+  path: deploy.yaml
