@@ -1,9 +1,9 @@
 name: ci pipeline
 
 on:
-  push:
-    branches:
-      - feat/add_pipeline_build_and_push_container_image
+  # push:
+  #   branches:
+  #     - feat/add_pipeline_build_and_push_container_image
   pull_request:
     branches:
       - dev

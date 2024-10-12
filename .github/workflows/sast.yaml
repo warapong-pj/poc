@@ -1,9 +1,12 @@
 name: sast pipeline
 
 on:
-  push:
+  # push:
+  #   branches:
+  #     - feat/add_pipeline_build_and_push_container_image
+  pull_request:
     branches:
-      - feat/add_pipeline_build_and_push_container_image
+      - dev
 
 jobs:
   sast-pipeline:
