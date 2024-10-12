@@ -1,0 +1,62 @@
+name: Update Kubernetes Manifest With Kustomize
+
+on:
+  push:
+    branches:
+      - feat/add_pipeline_build_and_push_container_image
+  # workflow_call:
+  #   inputs:
+  #     registry:
+  #       required: true
+  #       type: string
+  #     application:
+  #       required: true
+  #       type: string
+  #     version:
+  #       required: true
+  #       type: string
+  #     environment:
+  #       required: true
+  #       type: string
+
+jobs:
+  update-kustomize-container-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+      - name: update kubernetes manifest
+        run: |
+          #!/bin/sh
+
+          set -e
+
+          if ! command -v kustomize &> /dev/null
+          then
+              curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          fi
+
+          APP_DIR="kustomize/overlay/dev"
+
+          if [ ! -d $APP_DIR ]
+          then
+            echo "directory dose not existing"
+            exit 1
+          fi
+
+          cd $APP_DIR
+          kustomize edit set image ghcr.io/warapong-pj/sample-app:xxxxxx
+          kustomize build
+
+      #     # cd ~
+      #     # git config --global user.email "warapong.pj@gmail.com"
+      #     # git config --global user.name "warapong-pj"
+      #     # git add $APP_DIR
+      #     # git commit -m "ci: update ${{ inputs.application }} image tag ${{ inputs.version }} on ${{ inputs.environment }} environment"
+      #     # git push origin ${{ github.ref_name }}
+      # - name: check kustomize manifest
+      #   uses: bridgecrewio/checkov-action@master
+      #   with:
+      #     framework: kustomize
+      #     check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12
+      #     directory: "${{ inputs.application }}/overlay/${{ inputs.environment }}"
