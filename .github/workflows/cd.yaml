@@ -112,5 +112,5 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           framework: helm
-          check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12
-          directory: ${{ inputs.application }}
+          check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12,CKV_K8S_8,CKV_K8S_9
+          directory: chart
