@@ -1,4 +1,61 @@
-name: Update Kubernetes Manifest With Kustomize
+# name: Update Kubernetes Manifest With Kustomize
+
+# on:
+#   push:
+#     branches:
+#       - feat/add_pipeline_build_and_push_container_image
+#   # workflow_call:
+#   #   inputs:
+#   #     registry:
+#   #       required: true
+#   #       type: string
+#   #     application:
+#   #       required: true
+#   #       type: string
+#   #     version:
+#   #       required: true
+#   #       type: string
+#   #     environment:
+#   #       required: true
+#   #       type: string
+
+# jobs:
+#   update-kustomize-container-image:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: checkout source code
+#         uses: actions/checkout@v4
+#       - name: update kubernetes manifest
+#         run: |
+#           #!/bin/sh
+
+#           set -e
+
+#           if ! command -v kustomize &> /dev/null
+#           then
+#               curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+#           fi
+
+#           APP_DIR="kustomize/overlays/dev"
+
+#           if [ ! -d $APP_DIR ]
+#           then
+#             echo "directory doesn't existing"
+#             exit 1
+#           fi
+
+#           cd $APP_DIR
+#           kustomize edit set image sample-app=ghcr.io/warapong-pj/sample-app:xxxxxx
+#           kustomize build
+
+#       - name: check policy kustomize manifest
+#         uses: bridgecrewio/checkov-action@master
+#         with:
+#           framework: kustomize
+#           check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12,CKV_K8S_8,CKV_K8S_9
+#           directory: kustomize/overlays/dev
+
+name: helm update container image
 
 on:
   push:
@@ -20,37 +77,40 @@ on:
   #       type: string
 
 jobs:
-  update-kustomize-container-image:
+  update-helm-value-container-image:
     runs-on: ubuntu-latest
     steps:
       - name: checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
       - name: update kubernetes manifest
         run: |
           #!/bin/sh
 
           set -e
 
-          if ! command -v kustomize &> /dev/null
+          if ! command -v helm &> /dev/null
           then
-              curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+            curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+            chmod 700 get_helm.sh
+            ./get_helm.sh
           fi
 
-          APP_DIR="kustomize/overlays/dev"
+          FILE="chart/values-dev.yaml"
 
-          if [ ! -d $APP_DIR ]
+          if [ ! -f $FILE ]
           then
-            echo "directory doesn't existing"
+            echo "file dose not existing"
             exit 1
           fi
 
-          cd $APP_DIR
-          kustomize edit set image sample-app=ghcr.io/warapong-pj/sample-app:xxxxxx
-          kustomize build
+          yq -i '.image.repository = "sample-app=ghcr.io/warapong-pj/sample-app"' $FILE
+          yq -i '.image.tag = "xxxxxx"' $FILE
 
-      - name: check policy kustomize manifest
+          helm template chart --values $FILE
+
+      - name: check kustomize manifest
         uses: bridgecrewio/checkov-action@master
         with:
-          framework: kustomize
-          check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12,CKV_K8S_8,CKV_K8S_9
-          directory: kustomize/overlays/dev
+          framework: helm
+          check: CKV_K8S_21,CKV_K8S_10,CKV_K8S_11,CKV_K8S_12
+          directory: ${{ inputs.application }}
