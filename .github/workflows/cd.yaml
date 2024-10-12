@@ -36,11 +36,11 @@ jobs:
               curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
           fi
 
-          APP_DIR="kustomize/overlay/dev"
+          APP_DIR="kustomize/overlays/dev"
 
           if [ ! -d $APP_DIR ]
           then
-            echo "directory dose not existing"
+            echo "directory doesn't existing"
             exit 1
           fi
 
